@@ -1,28 +1,35 @@
 #!/usr/bin/env sh
 
-# Zinit
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
+# Antigen
+curl -L git.io/antigen > /usr/local/share/antigen.zsh
 
 # Install NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | XDG_CONFIG_HOME="/usr/local/share" bash
+chmod -R 777 /usr/local/share/nvm
 
 # Install Vimrc
-rm -rf ~/.vimrc
-ln -s `pwd`/vimrc ~/.vimrc
+rm -rf /etc/vimrc
+ln -s `pwd`/vimrc /etc/vimrc
 
 # Install Vim
-rm -rf ~/.vim
-ln -s `pwd`/vim ~/.vim
-# Install Zshrc
-rm -rf ~/.zshrc
-ln -s `pwd`/zshrc ~/.zshrc
+rm -rf /etc/vim
+ln -s `pwd`/vim /etc/vim
 
-# Install Profile
-rm -rf ~/.profile
-ln -s `pwd`/profile ~/.profile
+# Install Zshrc
+rm -rf /etc/zshrc
+ln -s `pwd`/zshrc /etc/zshrc
+
+touch ~/.zshrc
+
+# Install catfile
+ln -s `pwd`/cat-file.sh /usr/local/bin/catfile
+
 
 # Set Shell for Current User
-chsh --shell `which zsh` $USER
+for user in $(eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1)
+do
+    chsh --shell `which zsh` $user
+done
 
 # Initialize and Start new Shell
 zsh
