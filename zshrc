@@ -162,8 +162,8 @@ antigen apply
 # Configure Prompt
 ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[blue]git($reset_color$fg_bold[red]"
 ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[yellow]✗$reset_color "
-ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color $fg[yellow]✓$reset_color "
+ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]✗$reset_color "
+ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color $fg[green]✓$reset_color "
 
 setopt promptsubst
 
