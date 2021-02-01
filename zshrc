@@ -169,9 +169,9 @@ setopt promptsubst
 
 PROMPT=""
 if [ `whoami` = "root" ]; then
-  PROMPT+='%{$fg[red]#$reset_color%} '
+  PROMPT+='%{$fg[red]#$reset_color%}'
 fi
-PROMPT+="%(?:%{$fg_bold[green]%}-> :%{$fg_bold[red]%}-> )"
+PROMPT+="%(?:%{$fg_bold[green]%}> :%{$fg_bold[red]%}> )"
 PROMPT+='%{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
 
 
@@ -234,7 +234,7 @@ update_from_directory() {
 update_from_directory
 add-zsh-hook chpwd update_from_directory
 
-source ~/.profile
+[[ -s ~/.profile ]] && source ~/.profile
 
 source /etc/grc.zsh
 
