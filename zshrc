@@ -68,7 +68,7 @@ lazy_source () {
   eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
 }
 
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/sbin:/sbin:$PATH"
 
 source /usr/local/share/antigen.zsh
 
@@ -160,12 +160,12 @@ antigen apply
 #zinit load zpm-zsh/colorize
 
 # Configure Prompt
-ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[blue]git($reset_color$fg_bold[red]"
-ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]✗$reset_color "
-ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color $fg[green]✓$reset_color "
+#ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[blue]git($reset_color$fg_bold[red]"
+#ZSH_THEME_GIT_PROMPT_SUFFIX=""
+#ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]✗$reset_color "  
+#ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color $fg[green]✓$reset_color "
 
-setopt promptsubst
+#setopt promptsubst
 
 PROMPT=""
 if [ `whoami` = "root" ]; then
@@ -236,7 +236,7 @@ add-zsh-hook chpwd update_from_directory
 
 [[ -s ~/.profile ]] && source ~/.profile
 
-source /etc/grc.zsh
+[[ -s /etc/grc.zsh ]] && source /etc/grc.zsh
 
 set_title_term () {
   echo -ne "\033]0;${1%% *} - $(pwd)\007"
