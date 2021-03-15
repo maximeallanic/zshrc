@@ -185,6 +185,18 @@ alias tmp="cd /tmp"
 #alias pbcopy='xclip -selection clipboard'
 #alias pbpaste='xclip -selection clipboard -o'
 
+function screenfetch() {
+  SENSOR=$(sensors -j 2> /dev/null)
+  DEVICES=$(echo $SENSOR | jq -r '.[]')
+  ARGS=''
+  for DEVICE in $DEVICES; do
+    #NAME=$(echo $DEVICE | jq -r '')
+    VALUE=$(echo $DEVICE | jq -r '.temp1.temp1_input')
+    echo $VALUE
+    ARGS=$ARGS+','+$NAME+'='+$VALUE 
+  done
+#  echo $ARGS
+}
 
 function cd() {
   if [ -z "$*" ]; then
