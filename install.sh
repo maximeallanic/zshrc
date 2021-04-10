@@ -1,7 +1,10 @@
 #!/usr/bin/env sh
 
+
+BASE_DIR=$(dirname "$0")
+
 # Install packages
-apt install autojump zsh command-not-found
+apt install -y autojump zsh command-not-found
 
 # Antigen
 curl -L git.io/antigen > /usr/local/share/antigen.zsh
@@ -12,26 +15,37 @@ chmod -R 777 /usr/local/share/nvm
 
 # Install Vimrc
 rm -rf /etc/vimrc
-ln -s `pwd`/vimrc /etc/vimrc
+ln -s $BASE_DIR/vimrc /etc/vimrc
 
 # Install Vim
 rm -rf /etc/vim
-ln -s `pwd`/vim /etc/vim
+ln -s $BASE_DIR/vim /etc/vim
 
 # Install Zshrc
 rm -rf /etc/zsh/zshrc
-ln -s `pwd`/zshrc /etc/zsh/zshrc
+ln -s $BASE_DIR/zshrc /etc/zsh/zshrc
 
 touch ~/.zshrc
 
 # Install catfile
-ln -s `pwd`/cat-file.sh /usr/local/bin/catfile
+ln -s $BASE_DIR/cat-file.sh /usr/local/bin/catfile
+
+UID_MIN=$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)
+UID_MAX=$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)
 
 # Set Shell for Current User
-for user in $(eval getent passwd {$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)..$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)} | cut -d: -f1)
+echo $(awk -F: "\$3 >= $UID_MIN && \$3 <= $UID_MAX {print \$0}" /etc/passwd) | while read userLine 
 do
+    user=$(echo $userLine | cut -d: -f1)
+    home=$(echo $userLine | cut -d: -f6)
     chsh --shell `which zsh` $user
+    touch $home/.zshrc
+
+    # Initialize new Shell
+    runuser -l $user -c 'zsh -c "source /etc/zsh/zshrc"'
+
+
 done
 
-# Initialize and Start new Shell
-zsh
+chmod 777 /etc/zsh/zshrc.zwc
+ls -la /etc/zsh/zshrc.zwc

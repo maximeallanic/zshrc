@@ -45,6 +45,7 @@ unset -f pathmunge _src_etc_profile_d
 
 SAVEHIST=10
 HISTFILE=~/.zsh_history
+unset MAILCHECK
 
 # export NVM_DIR="/opt/nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -70,13 +71,17 @@ lazy_source () {
 
 export PATH="/usr/local/sbin:/sbin:$PATH"
 
-source /usr/local/share/antigen.zsh
+setopt nonomatch                                                                                                                                       
+setopt re_match_pcre                                                                                                                                   
+setopt EXTENDED_GLOB     
 
 autoload colors
 colors
 MAILCHECK=0
 
 NO_PROXY=*
+
+source /usr/local/share/antigen.zsh
 
 # Configure Key of term
 bindkey "^[[A" history-beginning-search-backward
@@ -162,8 +167,8 @@ antigen apply
 # Configure Prompt
 #ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[blue]git($reset_color$fg_bold[red]"
 #ZSH_THEME_GIT_PROMPT_SUFFIX=""
-#ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]✗$reset_color "  
-#ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color $fg[green]✓$reset_color "
+ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]x$reset_color "  
+ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color "
 
 #setopt promptsubst
 
