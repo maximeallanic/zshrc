@@ -3,8 +3,12 @@
 
 BASE_DIR=$(dirname "$0")
 
+apt update
+
 # Install packages
 apt install -y autojump zsh command-not-found
+
+apt dist-upgrade -y
 
 # Antigen
 curl -L git.io/antigen > /usr/local/share/antigen.zsh
@@ -43,9 +47,13 @@ do
 
     # Initialize new Shell
     runuser -l $user -c 'zsh -c "source /etc/zsh/zshrc"'
-
-
 done
 
+touch ~/.zshrc
+chsh --shell `which zsh` root
+chown -R root:root /usr/local/share/zsh
+chmod -R go-w /usr/local/share/zsh
+
+zsh -c "source /etc/zsh/zshrc"
 chmod 777 /etc/zsh/zshrc.zwc
 ls -la /etc/zsh/zshrc.zwc

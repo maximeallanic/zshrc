@@ -167,14 +167,14 @@ antigen apply
 # Configure Prompt
 #ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[blue]git($reset_color$fg_bold[red]"
 #ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]x$reset_color "  
-ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color "
+ZSH_THEME_GIT_PROMPT_DIRTY="$reset_color$fg_bold[blue])$reset_color $fg[red]x$reset_color" 
+ZSH_THEME_GIT_PROMPT_CLEAN="$reset_color$fg_bold[blue])$reset_color"
 
 #setopt promptsubst
 
 PROMPT=""
 if [ `whoami` = "root" ]; then
-  PROMPT+='%{$fg[red]#$reset_color%}'
+  PROMPT='%{$fg[red]#$reset_color%}'$PROMPT
 fi
 PROMPT+="%(?:%{$fg_bold[green]%}> :%{$fg_bold[red]%}> )"
 PROMPT+='%{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
