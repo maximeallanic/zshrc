@@ -69,7 +69,7 @@ lazy_source () {
   eval "$1 () { [ -f $2 ] && source $2 && $1 \$@ }"
 }
 
-export PATH="/usr/local/sbin:/sbin:$PATH"
+export PATH="/usr/local/sbin:/sbin:$PATH:/snap/bin"
 
 setopt nonomatch                                                                                                                                       
 setopt re_match_pcre                                                                                                                                   
@@ -154,7 +154,7 @@ antigen bundle voronkovich/gitignore.plugin.zsh
 antigen bundle lukechilds/zsh-better-npm-completion
 #antigen bundle arzzen/calc.plugin.zsh
 antigen bundle mattmc3/zsh-safe-rm
-antigen bundle zsh-users/zsh-syntax-highlighting
+#antigen bundle zsh-users/zsh-syntax-highlighting
 
 # Load the theme.
 antigen theme robbyrussell

@@ -479,3 +479,5 @@ Plug 'junegunn/vim-easy-align'
 call plug#end()
 
 colorscheme nord
+
+set mouse-=a
