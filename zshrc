@@ -147,14 +147,14 @@ antigen bundle clipboard
 antigen bundle cli
 antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle extract
-antigen bundle last-working-dir
+#antigen bundle last-working-dir
 antigen bundle command-not-found
 antigen bundle hlissner/zsh-autopair
 antigen bundle voronkovich/gitignore.plugin.zsh
 antigen bundle lukechilds/zsh-better-npm-completion
 #antigen bundle arzzen/calc.plugin.zsh
-antigen bundle mattmc3/zsh-safe-rm
-#antigen bundle zsh-users/zsh-syntax-highlighting
+#antigen bundle mattmc3/zsh-safe-rm
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 # Load the theme.
 antigen theme robbyrussell
@@ -164,20 +164,33 @@ antigen apply
 
 #zinit load zpm-zsh/colorize
 
+function is_ssh() {
+  p=${1:-$PPID}
+  read pid name x ppid y < <( cat /proc/$p/stat )
+  # or: read pid name ppid < <(ps -o pid= -o comm= -o ppid= -p $p)
+  [[ "$name" =~ sshd ]] && { return 0; }
+  [ "$ppid" -le 1 ]     && { return 1; }
+  is_ssh $ppid
+}
+
 # Configure Prompt
 #ZSH_THEME_GIT_PROMPT_PREFIX="$fg_bold[blue]git($reset_color$fg_bold[red]"
 #ZSH_THEME_GIT_PROMPT_SUFFIX=""
-#ZSH_THEME_GIT_PROMPT_DIRTY="%{$reset_color%}%{$fg_bold[blue]%})%{$reset_color%} %{$fg[red]%}x%{$reset_color%}"
-#ZSH_THEME_GIT_PROMPT_CLEAN="%{$reset_color%}%{$fg_bold[blue]%})%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$reset_color%}%{$fg_bold[blue]%})%{$reset_color%} %{$fg[red]%}x%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$reset_color%}%{$fg_bold[blue]%})%{$reset_color%}"
 
 #setopt promptsubst
 
 PROMPT=""
-if [ `whoami` = "root" ]; then
-  PROMPT='%{$fg[red]#$reset_color%}'$PROMPT
+if is_ssh ; then
+  PROMPT+="%{$fg_bold[grey]%}[%{$fg_bold[blue]%}$(hostname)%{$fg_bold[grey]%}]%{$reset_color%} "
 fi
-PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}> )"
-PROMPT+='%{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
+
+if [ `whoami` = "root" ]; then
+  PROMPT+="%{$fg[red]%}#%{$reset_color%}"
+fi
+PROMPT+="%(?:%{$fg_bold[green]%}>:%{$fg_bold[red]%}>) "
+PROMPT+="%{$fg[cyan]%}%~%{$reset_color%} \$(git_prompt_info)"
 
 
 
