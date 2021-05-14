@@ -183,7 +183,7 @@ ZSH_THEME_GIT_PROMPT_CLEAN="%{$reset_color%}%{$fg_bold[blue]%})%{$reset_color%}"
 
 PROMPT=""
 if is_ssh ; then
-  PROMPT+="%{$fg_bold[grey]%}[%{$fg_bold[blue]%}$(hostname)%{$fg_bold[grey]%}]%{$reset_color%} "
+  PROMPT+="%{$fg_bold[grey]%}[%{$fg_bold[blue]%}\$(hostname)%{$fg_bold[grey]%}]%{$reset_color%} "
 fi
 
 if [ `whoami` = "root" ]; then
