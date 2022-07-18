@@ -295,9 +295,9 @@ if UseCustomKeyBindings
 endif " End custom key bindings
 
 
-command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
+"command W :execute ':silent w !sudo tee % > /dev/null' | :edit!
 
-command UndoCloseTab call OpenLastBufferInNewTab()
+"command UndoCloseTab call OpenLastBufferInNewTab()
 set noswapfile
 set nobackup
 set nowb

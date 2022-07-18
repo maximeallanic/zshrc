@@ -257,7 +257,9 @@ function update_nvm() {
 update_from_directory() {
   update_nvm
   if [[ -f .env && -r .env ]]; then
+    set -o allexport
     source .env
+    set +o allexport
   fi
 }
 
