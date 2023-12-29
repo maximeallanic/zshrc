@@ -81,7 +81,8 @@ MAILCHECK=0
 
 NO_PROXY=*
 
-source /usr/local/share/antigen.zsh
+source /usr/share/zsh-antigen/antigen.zsh
+#source /usr/local/share/antigen.zsh
 
 # Configure Key of term
 bindkey "^[[A" history-beginning-search-backward
@@ -195,26 +196,17 @@ PROMPT+="%{$fg[cyan]%}%~%{$reset_color%} \$(git_prompt_info)"
 
 
 # Configure alias
+alias sudo='sudo '
 alias vi="vim"
 alias tmp="cd /tmp"
+alias apt="nala"
+#alias docker="podman"
+#alias docker-compose="podman-compose"
 #alias cat="ccat"
 #alias ls="grc --colour=auto ls --color=always -G"
 #alias rm="trash"
 #alias pbcopy='xclip -selection clipboard'
 #alias pbpaste='xclip -selection clipboard -o'
-
-function screenfetch() {
-  SENSOR=$(sensors -j 2> /dev/null)
-  DEVICES=$(echo $SENSOR | jq -r '.[]')
-  ARGS=''
-  for DEVICE in $DEVICES; do
-    #NAME=$(echo $DEVICE | jq -r '')
-    VALUE=$(echo $DEVICE | jq -r '.temp1.temp1_input')
-    echo $VALUE
-    ARGS=$ARGS+','+$NAME+'='+$VALUE 
-  done
-#  echo $ARGS
-}
 
 function cd() {
   if [ -z "$*" ]; then
@@ -233,20 +225,22 @@ function public-ip() {
   curl ifconfig.me
 }
 
+# Configure NVM
+DEFAULT_VERSION=${$(nvm ls default | tr -d '[:space:]' | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')//->/}
+if ! [ -x "$(command -v node)" ]; then
+     nvm use default > /dev/null
+fi
+
 function update_nvm() {
-  if ! [ -x "$(command -v node)" ]; then
-    nvm use default > /dev/null
-  fi
-  DEFAULT_VERSION=${$(nvm ls default | tr -d '[:space:]' | sed $'s,\x1b\\[[0-9;]*[a-zA-Z],,g')//->/}
   CURRENT_VERSION=$(node -v)
 
   if [ -e .nvmrc ]
   then
     LOCAL_VERSION=$(cat .nvmrc)
-  if [ $(nvm ls | grep $LOCAL_VERSION | wc -l) = "0" ]
-  then
-    nvm install $LOCAL_VERSION
-  fi
+    if [ $(nvm ls | grep $LOCAL_VERSION | wc -l) = "0" ]
+    then
+      nvm install $LOCAL_VERSION
+    fi
     nvm use $LOCAL_VERSION > /dev/null
   elif [ "$DEFAULT_VERSION" != "$CURRENT_VERSION" ]
   then
@@ -279,4 +273,3 @@ unset_title_term () {
 }
 add-zsh-hook preexec set_title_term
 add-zsh-hook precmd unset_title_term
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && lazy_source iterm2 "${HOME}/.iterm2_shell_integration.zsh"
