@@ -4,6 +4,16 @@
 BASE_DIR=$(dirname "$0")
 USE_LINK="${USE_LINK:-NO}"
 
+function copyOrLink () {
+  rm -rf $2
+  mkdir -p $(dirname "$2")
+  if [[ "$USE_LINK" == "YES" ]]; then
+    ln -s $1 $2
+  else
+    cp -rf $1 $2
+  fi
+}
+
 apt update
 
 # Install packages
@@ -19,45 +29,22 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | XDG_C
 chmod -R 777 /usr/local/share/nvm
 
 # Install Vimrc
-rm -rf /etc/vimrc
-if [[ "$USE_LINK" == "YES" ]]; then
-	ln -s $BASE_DIR/vimrc /etc/vimrc
-else
-	cp $BASE_DIR/vimrc /etc/vimrc
-fi
+copyOrLink $BASE_DIR/vimrc /etc/vimrc
 
 # Install Vim
-rm -rf /etc/vim
-if [[ "$USE_LINK" == "YES" ]]; then
-	ln -s $BASE_DIR/vim /etc/vim
-else
-	cp -r $BASE_DIR/vim /etc/vim
-fi
+copyOrLink $BASE_DIR/vim /etc/vim
 
 # Install Zshrc
-rm -rf /etc/zsh/zshrc
-if [[ "$USE_LINK" == "YES" ]]; then
-	ln -s $BASE_DIR/zshrc /etc/zsh/zshrc
-else
-	cp $BASE_DIR/zshrc /etc/zsh/zshrc
-fi
-
-touch ~/.zshrc
+copyOrLink $BASE_DIR/zshrc /etc/zsh/zshrc
+copyOrLink $BASE_DIR/zshrc /etc/zshrc
 
 # Install catfile
-if [[ "$USE_LINK" == "YES" ]]; then
-	ln -s $BASE_DIR/cat-file.sh /usr/local/bin/catfile
-else
-	cp $BASE_DIR/cat-file.sh /usr/local/bin/catfile
-fi
+copyOrLink $BASE_DIR/cat-file.sh /usr/local/bin/catfile
 
 # Install antigen
-mkdir -p /usr/share/zsh-antigen
-if [[ "$USE_LINK" == "YES" ]]; then
-	ln -s $BASE_DIR/antigen.zsh /usr/share/zsh-antigen/antigen.zsh
-else
-	cp $BASE_DIR/antigen.zsh /usr/share/zsh-antigen/antigen.zsh
-fi
+rm -rf /usr/share/zsh-antigen
+git clone https://github.com/zsh-users/antigen.git /usr/share/zsh-antigen
+
 
 UID_MIN=$(awk '/^UID_MIN/ {print $2}' /etc/login.defs)
 UID_MAX=$(awk '/^UID_MAX/ {print $2}' /etc/login.defs)
@@ -70,12 +57,15 @@ echo $(awk -F: "\$3 >= $UID_MIN && \$3 <= $UID_MAX {print \$0}" /etc/passwd) | w
 do
     user=$(echo $userLine | cut -d: -f1)
     home=$(echo $userLine | cut -d: -f6)
+    echo Set configuration for user $user in $home
     chsh --shell `which zsh` $user
     touch $home/.zshrc
 
     # Initialize new Shell
     runuser -l $user -c 'zsh -c "source /etc/zsh/zshrc"; nvm install 18'
     chmod 777 /etc/zsh/zshrc.zwc
+    
+    copyOrLink $BASE_DIR/vimrc $home/.vimrc
 done
 
 touch ~/.zshrc
